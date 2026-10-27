@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estação Meteorológica Inteligente</title>
+  <meta name="description" content="Dashboard público de monitoramento ambiental urbano em tempo real.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="/static/css/estilo.css">
+</head>
+<body class="app-body">
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <p class="text-cyan-300 text-sm uppercase tracking-[0.2em]">Cidades Inteligentes</p>
+        <h1 class="text-2xl font-bold">Estação Meteorológica Inteligente</h1>
+      </div>
+      <nav aria-label="Principal" class="flex flex-wrap gap-4 text-slate-300">
+        <a class="nav-link-ativo" href="/">Painel</a>
+        <a href="/mapa">Mapa</a>
+        <a href="/historico">Histórico</a>
+        <a href="/alertas">Alertas</a>
+        <a href="/sobre">Sobre</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo" class="max-w-7xl mx-auto px-4 py-8 space-y-8">
+    <section class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <h2 class="text-3xl font-bold">Monitoramento ambiental urbano</h2>
+        <p id="status-api" class="text-slate-300 mt-1">Conectando à API...</p>
+      </div>
+      <label class="text-sm">
+        Filtrar estação
+        <select id="filtro-estacao" class="block mt-1 bg-slate-900 border border-white/10 rounded-lg px-3 py-2"></select>
+      </label>
+    </section>
+
+    <section class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4" aria-label="Indicadores">
+      <article class="glass rounded-2xl p-4"><p class="text-slate-400 text-sm">Temperatura média 24h</p><p id="kpi-temperatura" class="kpi-valor">--</p></article>
+      <article class="glass rounded-2xl p-4"><p class="text-slate-400 text-sm">Umidade média 24h</p><p id="kpi-umidade" class="kpi-valor">--</p></article>
+      <article class="glass rounded-2xl p-4"><p class="text-slate-400 text-sm">Pressão média</p><p id="kpi-pressao" class="kpi-valor">--</p></article>
+      <article class="glass rounded-2xl p-4"><p class="text-slate-400 text-sm">Qualidade do ar</p><p id="kpi-ar" class="kpi-valor">--</p></article>
+      <article class="glass rounded-2xl p-4"><p class="text-slate-400 text-sm">Chuva acumulada 24h</p><p id="kpi-chuva" class="kpi-valor">--</p></article>
+      <article class="glass rounded-2xl p-4"><p class="text-slate-400 text-sm">Alertas ativos</p><p id="kpi-alertas" class="kpi-valor">--</p></article>
+    </section>
+
+    <section class="grid lg:grid-cols-2 gap-6">
+      <article class="glass rounded-2xl p-4">
+        <h3 class="font-semibold mb-3">Clima em tempo real</h3>
+        <div class="h-72"><canvas id="grafico-clima" aria-label="Gráfico de temperatura, umidade e pressão"></canvas></div>
+      </article>
+      <article class="glass rounded-2xl p-4">
+        <h3 class="font-semibold mb-3">Ar e precipitação</h3>
+        <div class="h-72"><canvas id="grafico-ar" aria-label="Gráfico de qualidade do ar e chuva"></canvas></div>
+      </article>
+    </section>
+
+    <section class="grid lg:grid-cols-5 gap-6">
+      <article class="glass rounded-2xl p-4 lg:col-span-3 overflow-x-auto">
+        <h3 class="font-semibold mb-3">Última leitura de cada estação</h3>
+        <table class="data-table w-full text-sm">
+          <thead class="text-slate-400 text-left">
+            <tr>
+              <th class="px-3 py-2">Estação</th>
+              <th class="px-3 py-2">Temp.</th>
+              <th class="px-3 py-2">Umidade</th>
+              <th class="px-3 py-2">Pressão</th>
+              <th class="px-3 py-2">Ar</th>
+              <th class="px-3 py-2">Chuva</th>
+              <th class="px-3 py-2">Quando</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-ultimas"></tbody>
+        </table>
+      </article>
+      <aside class="lg:col-span-2 space-y-3" id="lista-alertas" aria-live="polite"></aside>
+    </section>
+  </main>
+
+  <script src="/static/js/util.js"></script>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/graficos.js"></script>
+  <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

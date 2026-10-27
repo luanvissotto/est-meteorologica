@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Histórico e estatísticas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="/static/css/estilo.css">
+</head>
+<body class="app-body">
+  <header class="border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
+      <h1 class="text-2xl font-bold">Histórico climático</h1>
+      <nav class="flex flex-wrap gap-4 text-slate-300">
+        <a href="/">Painel</a>
+        <a href="/mapa">Mapa</a>
+        <a class="nav-link-ativo" href="/historico">Histórico</a>
+        <a href="/alertas">Alertas</a>
+        <a href="/sobre">Sobre</a>
+      </nav>
+    </div>
+  </header>
+  <main class="max-w-7xl mx-auto px-4 py-8 space-y-6">
+    <section class="flex flex-wrap items-center gap-4">
+      <label>Estação
+        <select id="filtro-estacao-hist" class="block mt-1 bg-slate-900 border border-white/10 rounded-lg px-3 py-2"></select>
+      </label>
+      <label class="flex items-center gap-2 mt-6">
+        <input id="filtro-validas" type="checkbox" checked>
+        Somente leituras validadas
+      </label>
+      <button id="btn-atualizar-hist" class="mt-6 bg-cyan-500 text-slate-950 font-semibold rounded-lg px-4 py-2">Atualizar</button>
+    </section>
+    <section id="cards-estatisticas" class="grid md:grid-cols-3 xl:grid-cols-6 gap-4"></section>
+    <section class="grid lg:grid-cols-2 gap-6">
+      <article class="glass rounded-2xl p-4"><div class="h-72"><canvas id="grafico-hist-clima"></canvas></div></article>
+      <article class="glass rounded-2xl p-4"><div class="h-72"><canvas id="grafico-hist-ar"></canvas></div></article>
+    </section>
+    <section class="glass rounded-2xl p-4 overflow-x-auto">
+      <table class="data-table w-full text-sm">
+        <thead class="text-slate-400 text-left">
+          <tr>
+            <th class="px-3 py-2">Estação</th>
+            <th class="px-3 py-2">Quando</th>
+            <th class="px-3 py-2">Temp.</th>
+            <th class="px-3 py-2">Umidade</th>
+            <th class="px-3 py-2">Pressão</th>
+            <th class="px-3 py-2">Ar</th>
+            <th class="px-3 py-2">Luz</th>
+            <th class="px-3 py-2">Chuva</th>
+            <th class="px-3 py-2">Válida</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-historico"></tbody>
+      </table>
+    </section>
+  </main>
+  <script src="/static/js/util.js"></script>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/graficos.js"></script>
+  <script src="/static/js/historico.js"></script>
+</body>
+</html>

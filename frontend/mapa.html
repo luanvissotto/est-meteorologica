@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa das estações</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="/static/css/estilo.css">
+</head>
+<body class="app-body">
+  <header class="border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
+      <h1 class="text-2xl font-bold">Mapa ambiental</h1>
+      <nav class="flex flex-wrap gap-4 text-slate-300">
+        <a href="/">Painel</a>
+        <a class="nav-link-ativo" href="/mapa">Mapa</a>
+        <a href="/historico">Histórico</a>
+        <a href="/alertas">Alertas</a>
+        <a href="/sobre">Sobre</a>
+      </nav>
+    </div>
+  </header>
+  <main class="max-w-7xl mx-auto px-4 py-8 space-y-6">
+    <section class="flex flex-wrap items-center justify-between gap-4">
+      <p class="text-slate-300 max-w-2xl">As estações são posicionadas por latitude e longitude. A busca da estação mais próxima usa a fórmula de Haversine e um vetor de deslocamento no plano local.</p>
+      <button id="btn-localizar" class="bg-cyan-500 text-slate-950 font-semibold rounded-lg px-4 py-2">Encontrar estação mais próxima</button>
+    </section>
+    <p id="status-geo" class="text-amber-200" aria-live="polite"></p>
+    <section class="grid lg:grid-cols-3 gap-6">
+      <div id="mapa-estacoes" class="lg:col-span-2 h-[520px] glass"></div>
+      <div id="lista-estacoes-mapa" class="space-y-3"></div>
+    </section>
+  </main>
+  <script src="/static/js/util.js"></script>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/mapa.js"></script>
+</body>
+</html>

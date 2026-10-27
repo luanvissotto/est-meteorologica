@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sobre o projeto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/css/estilo.css">
+</head>
+<body class="app-body">
+  <header class="border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
+      <h1 class="text-2xl font-bold">Sobre o projeto</h1>
+      <nav class="flex flex-wrap gap-4 text-slate-300">
+        <a href="/">Painel</a>
+        <a href="/mapa">Mapa</a>
+        <a href="/historico">Histórico</a>
+        <a href="/alertas">Alertas</a>
+        <a class="nav-link-ativo" href="/sobre">Sobre</a>
+      </nav>
+    </div>
+  </header>
+  <main class="max-w-4xl mx-auto px-4 py-10 space-y-6">
+    <section class="glass rounded-2xl p-6 space-y-3">
+      <h2 class="text-xl font-semibold">Estação Meteorológica Inteligente para Cidades Inteligentes</h2>
+      <p>Projeto integrador de Ciência da Computação que une hardware ESP32, sensores ambientais, API Python e um dashboard público para cidadãos.</p>
+      <p>Os dados de temperatura, umidade, pressão, qualidade do ar, luminosidade e pluviometria são validados por faixas físicas e lógica proposicional antes de gerar estatísticas e alertas.</p>
+    </section>
+    <section class="glass rounded-2xl p-6 space-y-2">
+      <h2 class="text-xl font-semibold">Como o sistema funciona</h2>
+      <ol class="list-decimal list-inside space-y-1 text-slate-300">
+        <li>O ESP32 lê DHT22, BMP280, MQ-135, LDR e o pluviômetro.</li>
+        <li>O firmware valida faixas e envia JSON via HTTP ou MQTT.</li>
+        <li>A API FastAPI autentica a estação, grava no SQLite/PostgreSQL e dispara alertas.</li>
+        <li>O dashboard atualiza gráficos, mapa e indicadores automaticamente.</li>
+      </ol>
+    </section>
+    <section class="glass rounded-2xl p-6 space-y-2">
+      <h2 class="text-xl font-semibold">Acesso técnico</h2>
+      <p>Documentação interativa da API: <a class="text-cyan-300 underline" href="/docs">/docs</a></p>
+      <p>Verificação de saúde: <a class="text-cyan-300 underline" href="/api/v1/saude">/api/v1/saude</a></p>
+    </section>
+  </main>
+</body>
+</html>
