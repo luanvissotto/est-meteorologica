@@ -5,12 +5,11 @@
 #define WIFI_SSID "Luan"
 #define WIFI_SENHA "luan1234"
 
-// --- Configurações da API ---
-// Para teste local: USE_HTTPS false, API_HOST "192.168.x.x", API_PORTA 8000
-// Para nuvem (Render/Railway/etc): USE_HTTPS true, API_HOST "sua-estacao.onrender.com", API_PORTA 443
-#define USE_HTTPS false
-#define API_HOST "192.168.0.10"
-#define API_PORTA 8000
+// --- Configurações da API para Nuvem (Render / HTTPS) ---
+// Configurado para nuvem com HTTPS na porta 443
+#define USE_HTTPS true
+#define API_HOST "est-meteorologica.onrender.com"
+#define API_PORTA 443
 #define API_CAMINHO "/api/v1/leituras"
 #define API_CHAVE "estacao-esp32-demo-key-001"
 #define ESTACAO_ID 1
