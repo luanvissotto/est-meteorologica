@@ -1,6 +1,6 @@
-# Estação Meteorológica Inteligente para Cidades Inteligentes
+# Estação Meteorológica Inteligente com ESP32
 
-Sistema completo de monitoramento ambiental urbano: firmware ESP32, API FastAPI, banco relacional e dashboard público para cidadãos.
+Sistema de monitoramento ambiental em tempo real: firmware ESP32, API FastAPI, banco relacional e dashboard público para acompanhamento das leituras dos sensores.
 
 ## Estrutura do repositório
 
@@ -23,7 +23,7 @@ testesm/
 
 ## Como executar o backend e o dashboard
 
-No Windows (PowerShell), a partir da pasta `backend`:
+No Windows (PowerShell), a partir da pasta `est-meteorologica/backend`:
 
 ```powershell
 python -m venv .venv
@@ -32,36 +32,42 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Abra:
+Abra no navegador:
 
-- Painel: http://127.0.0.1:8000/
+- Painel principal: http://127.0.0.1:8000/
 - Mapa: http://127.0.0.1:8000/mapa
-- Documentação da API: http://127.0.0.1:8000/docs
+- Histórico: http://127.0.0.1:8000/historico
+- Alertas: http://127.0.0.1:8000/alertas
+- Documentação interativa da API: http://127.0.0.1:8000/docs
 
-Na primeira inicialização o banco SQLite é criado com quatro estações de demonstração.
+> **Nota:** As estações de demonstração e dados simulados de outros locais foram removidos. O sistema inicia limpo, aguardando a conexão e os dados reais enviados pelo microcontrolador ESP32.
 
-## Simular o ESP32 sem hardware
+## Envio real pelo ESP32
 
-Em outro terminal, com o ambiente virtual ativado:
+O ESP32 envia as leituras via requisição HTTP:
+
+- **Endpoint:** `POST /api/v1/leituras`
+- **Cabeçalho:** `X-API-Key: estacao-esp32-demo-key-001` (ou a chave configurada em `config.h`)
+
+Configuração no arquivo `firmware/estacao_meteorologica/config.h`:
+
+```c
+#define WIFI_SSID "SUA_REDE_WIFI"
+#define WIFI_SENHA "SUA_SENHA_WIFI"
+#define API_HOST "IP_DO_SEU_COMPUTADOR"
+#define API_PORTA 8000
+#define API_CAMINHO "/api/v1/leituras"
+#define API_CHAVE "estacao-esp32-demo-key-001"
+#define ESTACAO_ID 1
+```
+
+## Simulação do ESP32 (sem o hardware físico)
+
+Caso queira testar o sistema sem a placa física, utilize o simulador que emula exatamente os dados da estação ESP32:
 
 ```powershell
 python simulador.py --url http://127.0.0.1:8000 --intervalo 5
 ```
-
-## Envio real pelo ESP32
-
-`POST /api/v1/leituras` com cabeçalho `X-API-Key`.
-
-Chaves de demonstração:
-
-| Estação | Chave |
-| --- | --- |
-| Praça da Sé | `estacao-se-demo-key-001` |
-| Parque Ibirapuera | `estacao-ibirapuera-demo-key-002` |
-| Avenida Paulista | `estacao-paulista-demo-key-003` |
-| Pinheiros | `estacao-pinheiros-demo-key-004` |
-
-Cadastro de nova estação: `POST /api/v1/estacoes` com cabeçalho `X-Admin-Token: admin-demo`.
 
 ## MQTT (opcional)
 
@@ -73,18 +79,10 @@ MQTT_BROKER=localhost
 MQTT_TOPIC=cidades-inteligentes/estacoes/+/leituras
 ```
 
-O firmware publica o mesmo JSON no tópico configurado em `config.h`.
+O firmware publica o mesmo payload JSON no tópico configurado em `config.h`.
 
-## Testes
+## Testes automatizados
 
 ```powershell
 python -m pytest -q
 ```
-
-## PostgreSQL
-
-```text
-DATABASE_URL=postgresql+psycopg2://usuario:senha@localhost:5432/estacao
-```
-
-Instale o driver `psycopg2-binary` se for usar PostgreSQL.

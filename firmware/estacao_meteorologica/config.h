@@ -1,15 +1,21 @@
 #ifndef CONFIG_ESTACAO_H
 #define CONFIG_ESTACAO_H
 
-#define WIFI_SSID "SUA_REDE_WIFI"
-#define WIFI_SENHA "SUA_SENHA_WIFI"
+// --- Configurações Wi-Fi ---
+#define WIFI_SSID "Luan"
+#define WIFI_SENHA "luan1234"
 
+// --- Configurações da API ---
+// Para teste local: USE_HTTPS false, API_HOST "192.168.x.x", API_PORTA 8000
+// Para nuvem (Render/Railway/etc): USE_HTTPS true, API_HOST "sua-estacao.onrender.com", API_PORTA 443
+#define USE_HTTPS false
 #define API_HOST "192.168.0.10"
 #define API_PORTA 8000
 #define API_CAMINHO "/api/v1/leituras"
-#define API_CHAVE "estacao-se-demo-key-001"
+#define API_CHAVE "estacao-esp32-demo-key-001"
 #define ESTACAO_ID 1
 
+// --- Configurações MQTT (Opcional) ---
 #define MQTT_ATIVO false
 #define MQTT_BROKER "192.168.0.10"
 #define MQTT_PORTA 1883
@@ -17,6 +23,7 @@
 #define MQTT_USUARIO ""
 #define MQTT_SENHA ""
 
+// --- Hardware e Sensores ---
 #define INTERVALO_COLETA_MS 15000UL
 #define PIN_DHT 4
 #define PIN_MQ135 34
@@ -25,6 +32,7 @@
 #define PIN_LED_STATUS 2
 #define FATOR_MM_POR_PULSO 0.25f
 
+// --- Limiares de Validação Física ---
 #define TEMP_MIN -20.0f
 #define TEMP_MAX 60.0f
 #define UMID_MIN 0.0f

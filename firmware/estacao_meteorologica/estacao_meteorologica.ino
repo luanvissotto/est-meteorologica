@@ -1,5 +1,6 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include <WiFiClientSecure.h>
 #include <Wire.h>
 #include <Adafruit_BMP280.h>
 #include <DHT.h>
@@ -93,8 +94,25 @@ bool enviarHttp(const String& json) {
   }
 
   HTTPClient http;
-  String url = "http://" + String(API_HOST) + ":" + String(API_PORTA) + String(API_CAMINHO);
-  http.begin(url);
+  String url;
+  if (USE_HTTPS) {
+    if (API_PORTA == 443) {
+      url = "https://" + String(API_HOST) + String(API_CAMINHO);
+    } else {
+      url = "https://" + String(API_HOST) + ":" + String(API_PORTA) + String(API_CAMINHO);
+    }
+    WiFiClientSecure secureClient;
+    secureClient.setInsecure(); // Permite conexões HTTPS na nuvem sem necessidade de gerenciar certificados SSL locais
+    http.begin(secureClient, url);
+  } else {
+    if (API_PORTA == 80) {
+      url = "http://" + String(API_HOST) + String(API_CAMINHO);
+    } else {
+      url = "http://" + String(API_HOST) + ":" + String(API_PORTA) + String(API_CAMINHO);
+    }
+    http.begin(wifiCliente, url);
+  }
+
   http.addHeader("Content-Type", "application/json");
   http.addHeader("X-API-Key", API_CHAVE);
   int codigo = http.POST(json);

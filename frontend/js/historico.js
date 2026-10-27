@@ -1,7 +1,7 @@
 async function carregarFiltros() {
   const estacoes = await ApiEstacao.estacoes();
   const seletor = document.getElementById("filtro-estacao-hist");
-  seletor.innerHTML = '<option value="">Todas as estações</option>';
+  seletor.innerHTML = estacoes.length > 1 ? '<option value="">Todas as estações</option>' : '';
   estacoes.forEach((estacao) => {
     const option = document.createElement("option");
     option.value = estacao.id;
@@ -44,10 +44,22 @@ async function carregarHistorico() {
 
   const tbody = document.getElementById("tabela-historico");
   tbody.innerHTML = "";
+  if (leituras.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="9" class="px-4 py-8 text-center text-slate-400">
+          <p class="font-medium text-slate-300">Nenhuma leitura registrada no histórico.</p>
+          <p class="text-xs text-cyan-300 mt-1">Conecte o ESP32 para que os dados coletados sejam gravados e exibidos aqui.</p>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
   leituras.forEach((leitura) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td class="px-3 py-2">${leitura.estacao_id}</td>
+      <td class="px-3 py-2 font-medium">${leitura.estacao_id}</td>
       <td class="px-3 py-2">${UtilEstacao.formatarData(leitura.coletada_em)}</td>
       <td class="px-3 py-2">${UtilEstacao.formatarNumero(leitura.temperatura, 1)}</td>
       <td class="px-3 py-2">${UtilEstacao.formatarNumero(leitura.umidade, 1)}</td>

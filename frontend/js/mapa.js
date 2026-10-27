@@ -21,7 +21,9 @@ function iconePorAr(classificacao) {
 async function carregarMapa() {
   const [estacoes, ultimas] = await Promise.all([ApiEstacao.estacoes(), ApiEstacao.ultimas()]);
   if (!mapaLeaflet) {
-    mapaLeaflet = L.map("mapa-estacoes").setView([-23.56, -46.65], 13);
+    const latInicial = estacoes.length > 0 ? estacoes[0].latitude : -23.5505;
+    const lngInicial = estacoes.length > 0 ? estacoes[0].longitude : -46.6333;
+    mapaLeaflet = L.map("mapa-estacoes").setView([latInicial, lngInicial], 14);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "&copy; OpenStreetMap",
     }).addTo(mapaLeaflet);
@@ -32,23 +34,28 @@ async function carregarMapa() {
   const lista = document.getElementById("lista-estacoes-mapa");
   lista.innerHTML = "";
 
+  if (estacoes.length === 0) {
+    lista.innerHTML = '<p class="text-slate-400">Nenhuma estação cadastrada.</p>';
+    return;
+  }
+
   estacoes.forEach((estacao) => {
     const leitura = ultimas.find((item) => item.estacao_id === estacao.id);
     const popup = leitura
-      ? `<strong>${estacao.nome}</strong><br>${estacao.bairro}<br>Temp: ${leitura.temperatura.toFixed(1)} °C<br>Umidade: ${leitura.umidade.toFixed(0)}%<br>Ar: ${UtilEstacao.rotuloAr(leitura.classificacao_ar)}`
-      : `<strong>${estacao.nome}</strong><br>Sem leituras ainda`;
+      ? `<strong>${estacao.nome}</strong><br>Temp: ${leitura.temperatura.toFixed(1)} °C<br>Umidade: ${leitura.umidade.toFixed(0)}%<br>Ar: ${UtilEstacao.rotuloAr(leitura.classificacao_ar)}`
+      : `<strong>${estacao.nome}</strong><br><span style="color:#94a3b8">Aguardando leituras do ESP32...</span>`;
     const marcador = L.marker([estacao.latitude, estacao.longitude], {
-      icon: iconePorAr(leitura ? leitura.classificacao_ar : "moderada"),
+      icon: iconePorAr(leitura ? leitura.classificacao_ar : "boa"),
     }).bindPopup(popup);
     marcador.addTo(camadaMarcadores);
 
     const card = document.createElement("article");
-    card.className = "glass rounded-xl p-4";
+    card.className = "glass rounded-xl p-4 cursor-pointer hover:border-cyan-400/50 transition";
     card.innerHTML = `
       <h3 class="font-semibold">${estacao.nome}</h3>
-      <p class="text-sm text-slate-300">${estacao.bairro} · ${estacao.cidade}</p>
+      <p class="text-sm text-slate-300">${estacao.descricao || "Estação ESP32"}</p>
       <p class="text-xs text-slate-400 mt-1">${estacao.latitude.toFixed(4)}, ${estacao.longitude.toFixed(4)}</p>
-      <p class="mt-2">${leitura ? UtilEstacao.formatarNumero(leitura.temperatura, 1, " °C") : "--"}</p>
+      <p class="mt-2 text-sm">${leitura ? `Última temp: <strong>${UtilEstacao.formatarNumero(leitura.temperatura, 1, " °C")}</strong>` : '<span class="text-cyan-300">Aguardando dados do ESP32...</span>'}</p>
     `;
     card.addEventListener("click", () => {
       mapaLeaflet.setView([estacao.latitude, estacao.longitude], 15);
@@ -99,12 +106,8 @@ async function localizarCidadao() {
   );
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    await carregarMapa();
-  } catch (erro) {
-    document.getElementById("status-geo").textContent = erro.message;
-  }
+document.addEventListener("DOMContentLoaded", () => {
+  carregarMapa();
   document.getElementById("btn-localizar").addEventListener("click", localizarCidadao);
-  window.setInterval(carregarMapa, 15000);
+  window.setInterval(carregarMapa, 10000);
 });

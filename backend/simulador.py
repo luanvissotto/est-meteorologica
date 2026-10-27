@@ -9,20 +9,17 @@ from datetime import datetime, timezone
 import httpx
 
 ESTACOES = [
-    {"id": 1, "chave": "estacao-se-demo-key-001", "nome": "Praça da Sé"},
-    {"id": 2, "chave": "estacao-ibirapuera-demo-key-002", "nome": "Parque Ibirapuera"},
-    {"id": 3, "chave": "estacao-paulista-demo-key-003", "nome": "Avenida Paulista"},
-    {"id": 4, "chave": "estacao-pinheiros-demo-key-004", "nome": "Pinheiros"},
+    {"id": 1, "chave": "estacao-esp32-demo-key-001", "nome": "Estação Meteorológica ESP32"},
 ]
 
 
 def gerar_leitura(estacao_id: int, tick: int) -> dict:
     hora = datetime.now().hour
     ciclo = math.sin((hora + tick / 10) / 24 * math.pi * 2)
-    temperatura = 23.5 + ciclo * 6 + estacao_id * 0.4 + random.uniform(-0.4, 0.4)
+    temperatura = 23.5 + ciclo * 6 + random.uniform(-0.4, 0.4)
     umidade = max(30.0, min(95.0, 68 - ciclo * 12 + random.uniform(-3, 3)))
-    pressao = 1013.2 - estacao_id * 0.3 + random.uniform(-1.2, 1.2)
-    qualidade_ar = 70 + estacao_id * 28 + abs(ciclo) * 25 + random.uniform(0, 15)
+    pressao = 1013.2 + random.uniform(-1.2, 1.2)
+    qualidade_ar = 70 + abs(ciclo) * 25 + random.uniform(0, 15)
     luminosidade = max(2.0, min(100.0, 50 + ciclo * 45 + random.uniform(-4, 4)))
     pluviometria = max(0.0, random.choice([0.0, 0.0, 0.0, 0.2, 1.1, 8.0, 27.0]) if tick % 9 == 0 else 0.0)
     return {
@@ -33,7 +30,7 @@ def gerar_leitura(estacao_id: int, tick: int) -> dict:
         "qualidade_ar": round(qualidade_ar, 2),
         "luminosidade": round(luminosidade, 2),
         "pluviometria": round(pluviometria, 2),
-        "origem": "simulador",
+        "origem": "esp32",
         "coletada_em": datetime.now(timezone.utc).isoformat(),
     }
 
@@ -73,12 +70,12 @@ def executar(base_url: str, intervalo: float, ciclos: int) -> None:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Simulador de estações meteorológicas ESP32.")
+    parser = argparse.ArgumentParser(description="Simulador da estação meteorológica ESP32.")
     parser.add_argument("--url", default="http://127.0.0.1:8000", help="URL base da API")
     parser.add_argument("--intervalo", type=float, default=5.0, help="Intervalo entre ciclos, em segundos")
     parser.add_argument("--ciclos", type=int, default=0, help="Quantidade de ciclos. 0 = infinito")
     args = parser.parse_args()
-    print(f"Enviando leituras para {args.url}")
+    print(f"Enviando leituras simuladas do ESP32 para {args.url}")
     executar(args.url, args.intervalo, args.ciclos)
 
 

@@ -19,6 +19,26 @@ class ErroNegocio(Exception):
 
 def obter_estacao_por_chave(db: Session, chave_api: str) -> Estacao:
     estacao = db.query(Estacao).filter(Estacao.chave_api == chave_api).first()
+    # Compatibilidade com chave do ESP32 (nova ou demonstração prévia)
+    if estacao is None and chave_api in {"estacao-esp32-demo-key-001", "estacao-se-demo-key-001"}:
+        estacao = db.query(Estacao).filter(Estacao.id == 1).first()
+        if estacao is None:
+            # Auto-provisionamento da estação ESP32 na primeira conexão
+            estacao = Estacao(
+                id=1,
+                nome="Estação Meteorológica ESP32",
+                descricao="Estação física baseada no microcontrolador ESP32.",
+                bairro="Local",
+                cidade="Local",
+                latitude=-23.5505,
+                longitude=-46.6333,
+                altitude_m=760.0,
+                chave_api=chave_api,
+                ativa=True,
+            )
+            db.add(estacao)
+            db.commit()
+            db.refresh(estacao)
     if estacao is None:
         raise ErroNegocio("Chave de API inválida.", 401)
     if not estacao.ativa:
@@ -48,7 +68,23 @@ def registrar_leitura(
             raise ErroNegocio("O identificador da estação não corresponde à chave de API.", 403)
     elif payload.estacao_id:
         estacao = db.query(Estacao).filter(Estacao.id == payload.estacao_id).first()
-        if estacao is None:
+        if estacao is None and payload.estacao_id == 1:
+            estacao = Estacao(
+                id=1,
+                nome="Estação Meteorológica ESP32",
+                descricao="Estação física baseada no microcontrolador ESP32.",
+                bairro="Local",
+                cidade="Local",
+                latitude=-23.5505,
+                longitude=-46.6333,
+                altitude_m=760.0,
+                chave_api="estacao-esp32-demo-key-001",
+                ativa=True,
+            )
+            db.add(estacao)
+            db.commit()
+            db.refresh(estacao)
+        elif estacao is None:
             raise ErroNegocio("Estação não encontrada.", 404)
         if not estacao.ativa:
             raise ErroNegocio("A estação está inativa e não pode enviar leituras.", 403)

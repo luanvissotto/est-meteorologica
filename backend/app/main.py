@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+import os
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -52,7 +53,21 @@ app.include_router(leituras.router)
 app.include_router(alertas.router)
 app.include_router(painel.router)
 
-FRONTEND_DIR = Path(__file__).resolve().parents[2] / "frontend"
+
+def localizar_frontend() -> Path:
+    candidatos = [
+        Path(__file__).resolve().parents[2] / "frontend",
+        Path(__file__).resolve().parents[1] / "frontend",
+        Path.cwd() / "frontend",
+        Path.cwd().parent / "frontend",
+    ]
+    for caminho in candidatos:
+        if caminho.exists() and (caminho / "index.html").exists():
+            return caminho
+    return candidatos[0]
+
+
+FRONTEND_DIR = localizar_frontend()
 
 
 @app.get("/api/v1/saude")
@@ -87,3 +102,10 @@ if FRONTEND_DIR.exists():
     @app.get("/sobre")
     def pagina_sobre():
         return FileResponse(FRONTEND_DIR / "sobre.html")
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    porta = int(os.environ.get("PORT", settings.api_port))
+    uvicorn.run("app.main:app", host="0.0.0.0", port=porta, reload=False)
