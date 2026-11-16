@@ -90,6 +90,10 @@ if FRONTEND_DIR.exists():
     def pagina_inicial():
         return FileResponse(FRONTEND_DIR / "index.html")
 
+    @app.get("/mapa")
+    def pagina_mapa():
+        return FileResponse(FRONTEND_DIR / "mapa.html")
+
     @app.get("/historico")
     def pagina_historico():
         return FileResponse(FRONTEND_DIR / "historico.html")
