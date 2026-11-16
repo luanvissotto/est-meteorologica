@@ -72,7 +72,7 @@ const GraficosEstacao = (() => {
     });
   }
 
-  function renderizarArChuva(canvasId, leituras) {
+  function renderizarArLuminosidade(canvasId, leituras) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) {
       return;
@@ -97,9 +97,9 @@ const GraficosEstacao = (() => {
           },
           {
             type: "bar",
-            label: "Chuva (mm)",
-            data: ordenadas.map((item) => item.pluviometria),
-            backgroundColor: "rgba(96,165,250,0.65)",
+            label: "Luminosidade (%)",
+            data: ordenadas.map((item) => item.luminosidade),
+            backgroundColor: "rgba(250,204,21,0.65)",
             yAxisID: "y1",
           },
         ],
@@ -113,13 +113,15 @@ const GraficosEstacao = (() => {
           y: { ticks: { color: "#c084fc" }, grid: estiloGrade },
           y1: {
             position: "right",
-            ticks: { color: "#60a5fa" },
+            ticks: { color: "#facc15" },
             grid: { drawOnChartArea: false },
+            min: 0,
+            max: 100,
           },
         },
       },
     });
   }
 
-  return { renderizarClima, renderizarArChuva };
+  return { renderizarClima, renderizarArLuminosidade, renderizarArChuva: renderizarArLuminosidade };
 })();

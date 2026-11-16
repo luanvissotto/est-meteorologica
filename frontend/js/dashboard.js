@@ -93,7 +93,7 @@ async function carregarDashboard() {
     const estacaoId = seletor.value;
     const serie = await ApiEstacao.leituras(estacaoId, 48, true);
     GraficosEstacao.renderizarClima("grafico-clima", serie);
-    GraficosEstacao.renderizarArChuva("grafico-ar", serie);
+    GraficosEstacao.renderizarArLuminosidade("grafico-ar", serie);
 
     const tbody = document.getElementById("tabela-ultimas");
     tbody.innerHTML = "";

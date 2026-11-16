@@ -34,8 +34,14 @@
     </section>
     <section id="cards-estatisticas" class="grid md:grid-cols-3 xl:grid-cols-6 gap-4"></section>
     <section class="grid lg:grid-cols-2 gap-6">
-      <article class="glass rounded-2xl p-4"><div class="h-72"><canvas id="grafico-hist-clima"></canvas></div></article>
-      <article class="glass rounded-2xl p-4"><div class="h-72"><canvas id="grafico-hist-ar"></canvas></div></article>
+      <article class="glass rounded-2xl p-4">
+        <h3 class="font-semibold mb-3">Clima histórico (Gráfico)</h3>
+        <div class="h-72"><canvas id="grafico-hist-clima" aria-label="Gráfico histórico de temperatura, umidade e pressão"></canvas></div>
+      </article>
+      <article class="glass rounded-2xl p-4">
+        <h3 class="font-semibold mb-3">Ar e luminosidade (Gráfico)</h3>
+        <div class="h-72"><canvas id="grafico-hist-ar" aria-label="Gráfico histórico de qualidade do ar e luminosidade"></canvas></div>
+      </article>
     </section>
     <section class="glass rounded-2xl p-4 overflow-x-auto">
       <table class="data-table w-full text-sm">

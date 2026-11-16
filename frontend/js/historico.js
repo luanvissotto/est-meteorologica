@@ -40,7 +40,7 @@ async function carregarHistorico() {
     .join("");
 
   GraficosEstacao.renderizarClima("grafico-hist-clima", leituras.slice(0, 80));
-  GraficosEstacao.renderizarArChuva("grafico-hist-ar", leituras.slice(0, 80));
+  GraficosEstacao.renderizarArLuminosidade("grafico-hist-ar", leituras.slice(0, 80));
 
   const tbody = document.getElementById("tabela-historico");
   tbody.innerHTML = "";
